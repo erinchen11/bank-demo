@@ -1,0 +1,16 @@
+version: "1"
+packages:
+    #可以用sqlc產生多個go package
+    #此專案目前只需要一個 名稱為db
+  - name: "db"
+    path: "./db/sqlc"
+    queries: "./db/query/"
+    schema: "./db/migration/"
+    engine: "postgresql"
+    emit_prepared_queries: true
+    emit_interface: false
+    # account table -> Accounts struct
+    emit_exact_table_names: true
+    emit_empty_slices: false
+    emit_json_tags: true
+    json_tags_case_style: "camel"
