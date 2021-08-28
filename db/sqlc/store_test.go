@@ -14,7 +14,7 @@ func TestTransferTx(t *testing.T) {
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
 	fmt.Println(" >>> before: ", account1.Balance, account2.Balance)
-	// write database transaction is something we must always be vary carefule with
+	// write database transaction is something we must always be vary careful with
 	// must handle the concurrency carefully.
 	// the best way to make the transaction well is to run it with several concurrent go routines.
 	// run n concurrent transfer transactions
@@ -26,8 +26,8 @@ func TestTransferTx(t *testing.T) {
 
 	for i := 0; i < n; i++ {
 		// have to assign a name for each transaction and pass it into the TransferTx() function
-   		// via the context argument.
-		txName := fmt.Sprintf("tx %d", i + 1)
+		// via the context argument.
+		txName := fmt.Sprintf("tx %d", i+1)
 		go func() {
 			// inside the go routine
 			// we call store.TransferTx() function
@@ -49,7 +49,7 @@ func TestTransferTx(t *testing.T) {
 			// WithValue : key-value, value is the transaction name
 			// in store.go, we declare a txKey, later we will have to use this key to get transaction name
 			// from the input context of the TransferTx() function.
-			ctx := context.WithValue(context.Background(),txKey, txName)
+			ctx := context.WithValue(context.Background(), txKey, txName)
 			result, err := store.TransferTx(ctx, TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
@@ -116,14 +116,18 @@ func TestTransferTx(t *testing.T) {
 		require.NotEmpty(t, toAccount)
 		require.Equal(t, account2.ID, toAccount.ID)
 
-		//TODO :  check accounts' balance
+		//check accounts' balance
 		fmt.Println(" >>> tx: ", fromAccount.Balance, toAccount.Balance)
 		diff1 := account1.Balance - fromAccount.Balance
 		diff2 := toAccount.Balance - account2.Balance
 		require.Equal(t, diff1, diff2)
 		require.True(t, diff1 > 0)
 		require.True(t, diff1%amount == 0) // 1 * amount, 2 * amount, 3 * amount, ..., n * amount
-
+	
+		//account 1 will be decreased by 1 times amount after the 1st transaction,
+		//then 2 times amount after the 2nd transaction,
+		//3 times amount after the 3rd transaction, and so on and so forth.
+		//k must be an integer between 1 and n, where n is the number of executed transactions.
 		k := int(diff1 / amount)
 		require.True(t, k >= 1 && k <= n) // n is the number of transactions
 		// to check those we need a map existed
@@ -144,11 +148,11 @@ func TestTransferTx(t *testing.T) {
 	require.Equal(t, account1.Balance-int64(n)*amount, updatedAccount1.Balance)
 	require.Equal(t, account2.Balance+int64(n)*amount, updatedAccount2.Balance)
 
-	// error : 
+	// error :
 	// before:  564 48
- 	//>>> tx:  554 58
- 	//>>> tx:  544 68
- 	//>>> tx:  544 78
+	//>>> tx:  554 58
+	//>>> tx:  544 68
+	//>>> tx:  544 78
 	//第三筆資料沒有-10，回顧一下 account.sql中的 getAccount
 	// SELECT * FROM accounts
 	// WHERE id = $1 LIMIT 1;

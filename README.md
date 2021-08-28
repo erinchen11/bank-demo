@@ -1,18 +1,22 @@
 # Bank- Demo
 
 ##
-
-use golang, Postgres, docker to develope a simple Bank
+Use Golang, Postgres, Gin, docker to develope a Bank Service.
 
 ## function
 
 - Create and manage account
-- Recore all balance changes
+- Record all balance changes
 - Money transfer transaction
 
 ## Database Design
 - Design DB schema - SQL
-- Save and share DB diagram
-- Generate SQL code
+- Save and Share DB diagram, Connect with Postgres
+- Use sqlc to Generate SQL code and Write Test Code
+- Use Viper to Load Config File
+
+## Gin Web Framework
+- Build Api Service with Gin
+
 
 

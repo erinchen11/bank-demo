@@ -13,6 +13,7 @@ type Store struct {
 	db *sql.DB
 }
 
+
 // NewStore creates a new Store
 func NewStore(db *sql.DB) *Store {
 	return &Store{
@@ -29,6 +30,7 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 		log.Fatal(err)
 	}
 	// call New() with created transaction, and get back a new Queries object
+
 	q := New(tx)
 	// Now we have the Queries that runs within transaction
 	// we can call the input function with that queries, and get back an error
@@ -58,8 +60,6 @@ type TransferTxResult struct {
 	FromEntry   Entries   `json: "from_entry"`
 	ToEntry     Entries   `json: "to_entry"`
 }
-
-// 第2個花括號表示 我們已經建立該型別之新的空物件
 var txKey = struct{}{}
 
 // TransferTx performs a money transfer from one account to the other
@@ -79,7 +79,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		// 把編號後的tx帶入
 		txName := ctx.Value(txKey)
 		fmt.Println(txName, "create transfer")
-
+        
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: arg.FromAccountID,
 			ToAccountID:   arg.ToAccountID,
