@@ -16,7 +16,8 @@ Use Golang, Postgres, Gin, docker to develope a Bank Service.
 - Use Viper to Load Config File
 
 ## Gin Web Framework
-- Build Api Service with Gin
+- Build API Service with Gin
+- Unit Test API with gomock
 
 
 
