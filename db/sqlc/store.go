@@ -7,23 +7,47 @@ import (
 	"log"
 )
 
+// mock DB to test HTTP API, need to create an interface
+// Server struct has db.Store to connect to DB
+// so, our interface should be included methods of db.Store
+// and TransferTx
+type Store interface{
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) 
+}
+
 // Store struct provides all functions to execute db queries and transactions
-type Store struct {
+// ------ after mock DB-----
+// Store change to SQLStore
+type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
 
 
 // NewStore creates a new Store
-func NewStore(db *sql.DB) *Store {
-	return &Store{
-		db:      db,
+// func NewStore(db *sql.DB) *Store {
+// 	return &Store{
+// 		db:      db,
+// 		Queries: New(db),
+// 	}
+// }
+//----- after mock DB------
+//NewStore() function should not return a pointer, 
+//but just a Store interface. And inside, 
+//it should return the real DB implementation of the interface, 
+//which is SQLStore.
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
+		db: db,
 		Queries: New(db),
 	}
 }
 
+
 // execTx executes a function within a database transaction
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+//----- after mock DB------ Store change to SQLStore
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	// Call store.db.BiginTx() for start a new db transaction
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -65,7 +89,7 @@ var txKey = struct{}{}
 // TransferTx performs a money transfer from one account to the other
 // It creates a transfer recorde, add account entries,
 // and update accounts' balance with a singlge database transaction
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 
 	// empty TransferTxresult
 	var result TransferTxResult

@@ -20,7 +20,6 @@ func New(db DBTX) *Queries {
 }
 
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
-
 	q := Queries{db: db}
 	var err error
 	if q.addAccountBalanceStmt, err = db.PrepareContext(ctx, addAccountBalance); err != nil {

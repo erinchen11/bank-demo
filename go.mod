@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/gin-gonic/gin v1.7.4 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/kyleconroy/sqlc v1.8.0 // indirect
 	github.com/lib/pq v1.10.2 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
