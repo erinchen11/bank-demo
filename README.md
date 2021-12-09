@@ -19,5 +19,5 @@ Use Golang, Postgres, Gin, docker to develope a Bank Service.
 - Build API Service with Gin
 - Unit Test API with gomock
 
-
+## More Detail [note](note.md) 
 
